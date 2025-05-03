@@ -1,5 +1,5 @@
-# SeenIt? 🙄
-SeenIt? is a content-based movie recommendation system implementing TF-IDF vectorization and cosine similarity. The Python engine processes plot descriptions, genre metadata, and director information to generate personalized suggestions. Designed as a modular application demonstrating production-ready ML pipelines for educational and practical implementations.
+# PickSmith 🔍
+PickSmith is a content-based movie recommendation system that implements TF-IDF vectorisation and cosine similarity. The Python engine processes plot descriptions, genre metadata, and director information to generate personalised suggestions. It is designed as a modular application that demonstrates production-ready ML pipelines for educational and practical implementations.
 
 ## Features
 - Analyses movie plot descriptions using TF-IDF vectorisation text processing  
