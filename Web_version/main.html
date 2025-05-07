@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picksmith 🎬</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    input[type="text"] {
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      width: 300px;
+      max-width: 90%;
+    }
+
+    button {
+      padding: 0.8rem 1.2rem;
+      margin-left: 1rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #results {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    .rec-item {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 Picksmith</h1>
+  <p>Enter a movie you liked and get similar recommendations</p>
+
+  <div>
+    <input type="text" id="movieInput" placeholder="e.g. Interstellar">
+    <button onclick="getRecommendations()">Get Picks</button>
+  </div>
+
+  <div id="results"></div>
+
+  <script>
+    async function getRecommendations() {
+      const movie = document.getElementById('movieInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = "";
+
+      if (!movie) {
+        resultsDiv.innerHTML = "<p>Please enter a movie name.</p>";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:8000/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ movie_name: movie })
+        });
+
+        const data = await res.json();
+
+        if (!data.recommended || data.recommended.length === 0) {
+          resultsDiv.innerHTML = "<p>No recommendations found.</p>";
+          return;
+        }
+
+        if (typeof data.recommended === "string") {
+  resultsDiv.innerHTML = `<p style="color: red;">${data.recommended}</p>`;
+} else {
+  resultsDiv.innerHTML = `<h3>Recommendations for "${data.movie_name}":</h3>`;
+  data.recommended.forEach(movie => {
+    resultsDiv.innerHTML += `
+      <div class="rec-item">
+        <strong>${movie.title}</strong><br>
+        <em>${movie.genres}</em><br>
+        <span>${movie.director}</span><br>
+        <span>⭐ ${movie.rating}/10</span><br>
+        <p style="margin-top: 8px;">${movie.description.slice(0, 120)}...</p>
+      </div>
+    `;
+  });
+}
+
+
+      } catch (error) {
+        console.error(error);
+        resultsDiv.innerHTML = "<p style='color:red;'>Failed to fetch recommendations. Try again.</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>
