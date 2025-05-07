@@ -89,7 +89,7 @@
       }
 
       try {
-        const res = await fetch("http://localhost:8000/recommend", {
+        const res = await fetch("https://picksmith-backend.onrender.com/recommend", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ movie_name: movie })
