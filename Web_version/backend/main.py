@@ -46,6 +46,10 @@ async def get_recommendations(movie: MovieInput):
     if isinstance(result, str):  # If movie not found or error
         return {"movie_name": movie_title, "recommended": result}
 
+@app.get("/ping")
+def ping():
+    return {"status": "alive"}
+
     # Convert dataframe rows to list of dicts
     recommended = []
     for _, row in result.iterrows():
